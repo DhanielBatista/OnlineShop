@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using OnlineShop.Models;
+using OnlineShop.Models.Dtos;
 using OnlineShop.Services;
 
 namespace OnlineShop.Controllers
@@ -10,9 +12,10 @@ namespace OnlineShop.Controllers
     public class ProdutoController : Controller
     {
         private readonly ProdutoService _produtoService;
+        private readonly IMapper _mapper;
 
-        public ProdutoController(ProdutoService produtoService) =>
-            _produtoService = produtoService;
+        public ProdutoController(ProdutoService produtoService, IMapper mapper) =>
+            (_produtoService, _mapper) = (produtoService, mapper);
 
         [HttpGet]
         public async Task<List<Produto>> BuscarProdutos([FromQuery] int? numeroPagina, [FromQuery] string? nome, [FromQuery] string? produto, [FromQuery] bool? produtoVendido) {
@@ -63,11 +66,12 @@ namespace OnlineShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarProduto(Produto novoProduto)
+        public async Task<IActionResult> CriarProduto([FromBody] CriarProdutoDto produtoDto)
         {
-            await _produtoService.CriarProdutoAsync(novoProduto);
+            var produto = _mapper.Map<Produto>(produtoDto);
+            await _produtoService.CriarProdutoAsync(produto);
 
-            return CreatedAtAction(nameof(BuscarProdutos), new {id = novoProduto.Id}, novoProduto);
+            return CreatedAtAction(nameof(BuscarProdutos), new {id = produto.Id}, produto);
         }
 
         [HttpPut("{id:length(24)}")]

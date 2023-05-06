@@ -38,3 +38,5 @@ C:\Users\Hengrist\source\repos\OnlineShop\OnlineShop\bin\Debug\net6.0\ZstdSharp.
 C:\Users\Hengrist\source\repos\OnlineShop\OnlineShop\bin\Debug\net6.0\runtimes\linux\native\libmongocrypt.so
 C:\Users\Hengrist\source\repos\OnlineShop\OnlineShop\bin\Debug\net6.0\runtimes\osx\native\libmongocrypt.dylib
 C:\Users\Hengrist\source\repos\OnlineShop\OnlineShop\bin\Debug\net6.0\runtimes\win\native\mongocrypt.dll
+C:\Users\Hengrist\source\repos\OnlineShop\OnlineShop\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\Hengrist\source\repos\OnlineShop\OnlineShop\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
