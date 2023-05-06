@@ -4,9 +4,9 @@ using OnlineShop.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<OnlineShopDatabaseSettings>(builder.Configuration.GetSection("OnlineShopDatabase"));
 builder.Services.AddSingleton<ProdutoService>();
 builder.Services.AddControllers();
-builder.Services.Configure<OnlineShopDatabaseSettings>(builder.Configuration.GetSection("OnlineShopDatabase"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

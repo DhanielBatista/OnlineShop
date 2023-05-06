@@ -7,12 +7,13 @@ namespace OnlineShop.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = null;
+        public string Id { get; set; }
         [BsonElement("Nome")]
         public string Nome { get; set; } = null;
         [BsonElement("Preco")]
         public double Preco { get; set; }
         [BsonElement("Descrição")]
         public string Descricao { get; set; } = null;
+        public bool ProdutoVendido { get; set; } = false;
     }
 }

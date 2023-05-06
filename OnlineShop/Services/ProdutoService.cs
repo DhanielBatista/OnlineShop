@@ -9,8 +9,7 @@ namespace OnlineShop.Services
     {
         private readonly IMongoCollection<Produto> _produtoCollection;
 
-        public ProdutoService(
-            IOptions<OnlineShopDatabaseSettings> onlineShopDatabaseSettings)
+        public ProdutoService(IOptions<OnlineShopDatabaseSettings> onlineShopDatabaseSettings)
         {
             var mongoClient = new MongoClient(
                 onlineShopDatabaseSettings.Value.ConnectionString);
@@ -20,8 +19,16 @@ namespace OnlineShop.Services
                 onlineShopDatabaseSettings.Value.ProdutoCollectionName);
         }
         
-        public async Task<List<Produto>> BuscarProdutosAsync() =>
-            await _produtoCollection.Find(_ => true).ToListAsync();
+        public async Task<List<Produto>> BuscarProdutosAsync(int skip, int limit, FilterDefinition<Produto> filtro = null)
+        {
+            var produtos = await _produtoCollection.Find(filtro ?? Builders<Produto>.Filter.Empty)
+                .Skip(skip)
+                .Limit(limit)
+                .ToListAsync();
+            return produtos;
+
+        }
+            
         
         public async Task<Produto?> BuscarProdutosPorIdAsync(string id) =>
             await _produtoCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
