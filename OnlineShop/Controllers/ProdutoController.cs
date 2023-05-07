@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using OnlineShop.Models;
 using OnlineShop.Models.Dtos;
+using OnlineShop.Models.Enums;
 using OnlineShop.Services;
 
 namespace OnlineShop.Controllers
@@ -18,20 +19,28 @@ namespace OnlineShop.Controllers
             (_produtoService, _mapper) = (produtoService, mapper);
 
         [HttpGet]
-        public async Task<List<Produto>> BuscarProdutos([FromQuery] int? numeroPagina, [FromQuery] string? nome, [FromQuery] string? produto, [FromQuery] bool? produtoVendido) {
+        public async Task<ActionResult<List<Produto>>> BuscarProdutos([FromQuery] int? numeroPagina, [FromQuery] bool? produtoVendido, [FromQuery] string? produtoNome, 
+            [FromQuery] double? precoMaiorQue, [FromQuery] double? precoMenorQue, 
+            [FromQuery] OrdenacaoEnum ordenacaoProduto) {
 
-            var listaFiltros = new List<FilterDefinition<Produto>>();
-
-            if(!numeroPagina.HasValue || numeroPagina <= 0)
+            var filtroLista = new List<FilterDefinition<Produto>>();
+            SortDefinition<Produto> ordenacao = null;
+            
+            
+            if (!numeroPagina.HasValue || numeroPagina <= 0)
             {
                 numeroPagina = 1;
             }
-            int skip = (int)(numeroPagina - 1) * 5;
-            int limit = 5;
+            int skip = (int)(numeroPagina - 1) * 10;
+            int limit = 10;
 
-            var filtroLista = new List<FilterDefinition<Produto>>();
+            if(produtoNome != null)
+            {
+                var filtro = Builders<Produto>.Filter.Eq(c => c.Nome, produtoNome);
+                filtroLista.Add(filtro);
+            }
 
-            if(produtoVendido != null)
+            if (produtoVendido != null)
             {
                 if(produtoVendido == true)
                 {
@@ -39,15 +48,39 @@ namespace OnlineShop.Controllers
                     filtroLista.Add(filtro);
                 }
             }
-            
-            if(filtroLista.Count == 0)
+            if (precoMaiorQue != null)
             {
-                var produtos = await _produtoService.BuscarProdutosAsync(skip, limit);
+                var filtro = Builders<Produto>.Filter.Gt(c => c.Preco, precoMaiorQue);
+                filtroLista.Add(filtro);
+
+            }
+
+            if (precoMenorQue != null )
+            {
+                var filtro = Builders<Produto>.Filter.Lt(c => c.Preco, precoMenorQue);
+                filtroLista.Add(filtro);
+            }
+
+            if (ordenacaoProduto == OrdenacaoEnum.decrescente)
+            {
+                ordenacao = Builders<Produto>.Sort.Descending(c => c.Preco);
+
+            }
+            else if (ordenacaoProduto == OrdenacaoEnum.crescente)
+            {
+                ordenacao = Builders<Produto>.Sort.Ascending(c => c.Preco);
+                
+            }
+
+
+            if (filtroLista.Count == 0)
+            {
+                var produtos = await _produtoService.BuscarProdutosAsync(skip, limit, ordenacao:ordenacao);
                 return produtos;
             }
 
             var filtros = Builders<Produto>.Filter.And(filtroLista);
-            var produtosFiltrados = await _produtoService.BuscarProdutosAsync(skip, limit, filtros);
+            var produtosFiltrados = await _produtoService.BuscarProdutosAsync(skip, limit, filtros, ordenacao);
 
             return produtosFiltrados;
         }
@@ -75,7 +108,7 @@ namespace OnlineShop.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> AtualizarProduto(string id, Produto atualizaProduto)
+        public async Task<IActionResult> AtualizarProduto(string id,[FromBody] EditarProdutoDto editarProdutoDto)
         {
             var produto = await _produtoService.BuscarProdutosPorIdAsync(id);
 
@@ -84,9 +117,9 @@ namespace OnlineShop.Controllers
                 return NotFound();
             }
 
-            atualizaProduto.Id = produto.Id;
+            _mapper.Map(editarProdutoDto, produto);
 
-            await _produtoService.AtualizarProdutoAsync(id, atualizaProduto);
+            await _produtoService.AtualizarProdutoAsync(id, produto);
             return NoContent();
         }
 

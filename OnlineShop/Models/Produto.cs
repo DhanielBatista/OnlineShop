@@ -11,9 +11,11 @@ namespace OnlineShop.Models
         [BsonElement("Nome")]
         public string Nome { get; set; } = null;
         [BsonElement("Preco")]
-        public double Preco { get; set; }
+        public double? Preco { get; set; }
         [BsonElement("Descrição")]
         public string Descricao { get; set; } = null;
+        [BsonElement("DataCadastro")]
+        public DateTime DataCadastro { get; set; } = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
         public bool ProdutoVendido { get; set; } = false;
     }
 }

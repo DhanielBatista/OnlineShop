@@ -9,6 +9,7 @@ namespace OnlineShop.Profiles
         public ProdutoProfile()
         {
             CreateMap<CriarProdutoDto, Produto>();
+            CreateMap<EditarProdutoDto, Produto>();
         }
     }
 }
