@@ -7,7 +7,7 @@ using OnlineShop.Services;
 namespace OnlineShop.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class VendaController : ControllerBase
     {
         private readonly IMapper _mapper;

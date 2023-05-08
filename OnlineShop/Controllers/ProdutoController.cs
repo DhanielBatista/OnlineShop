@@ -9,7 +9,7 @@ using OnlineShop.Services;
 namespace OnlineShop.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProdutoController : Controller
     {
         private readonly ProdutoService _produtoService;
@@ -19,14 +19,15 @@ namespace OnlineShop.Controllers
             (_produtoService, _mapper) = (produtoService, mapper);
 
         [HttpGet]
-        public async Task<ActionResult<List<Produto>>> BuscarProdutos([FromQuery] int? numeroPagina, [FromQuery] bool? produtoVendido, [FromQuery] string? produtoNome, 
+        public async Task<ActionResult<List<Produto>>> BuscarProdutos([FromQuery] int? numeroPagina, [FromQuery] string? produtoNome, 
             [FromQuery] double? precoMaiorQue, [FromQuery] double? precoMenorQue, 
             [FromQuery] OrdenacaoEnum ordenacaoProduto) {
 
             var filtroLista = new List<FilterDefinition<Produto>>();
             SortDefinition<Produto> ordenacao = null;
-            
-            
+            var produtoVendido = Builders<Produto>.Filter.Eq(c => c.ProdutoVendido, false);
+            filtroLista.Add(produtoVendido);
+
             if (!numeroPagina.HasValue || numeroPagina <= 0)
             {
                 numeroPagina = 1;
@@ -40,14 +41,6 @@ namespace OnlineShop.Controllers
                 filtroLista.Add(filtro);
             }
 
-            if (produtoVendido != null)
-            {
-                if(produtoVendido == true)
-                {
-                    var filtro = Builders<Produto>.Filter.Eq(c => c.ProdutoVendido, produtoVendido);
-                    filtroLista.Add(filtro);
-                }
-            }
             if (precoMaiorQue != null)
             {
                 var filtro = Builders<Produto>.Filter.Gt(c => c.Preco, precoMaiorQue);
