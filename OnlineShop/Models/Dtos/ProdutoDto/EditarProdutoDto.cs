@@ -1,4 +1,4 @@
-﻿namespace OnlineShop.Models.Dtos
+﻿namespace OnlineShop.Models.Dtos.ProdutoDto
 {
     public class EditarProdutoDto
     {

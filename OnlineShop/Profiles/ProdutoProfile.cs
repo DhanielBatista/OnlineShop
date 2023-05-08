@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using OnlineShop.Models;
-using OnlineShop.Models.Dtos;
+using OnlineShop.Models.Dtos.ProdutoDto;
 
 namespace OnlineShop.Profiles
 {

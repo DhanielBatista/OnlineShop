@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using OnlineShop.Models;
-using OnlineShop.Models.Dtos;
+using OnlineShop.Models.Dtos.ProdutoDto;
 using OnlineShop.Models.Enums;
 using OnlineShop.Services;
 
@@ -126,7 +126,7 @@ namespace OnlineShop.Controllers
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> DeletarProduto(string id)
         {
-            var produto = await (_produtoService.BuscarProdutosPorIdAsync(id));
+            var produto = await _produtoService.BuscarProdutosPorIdAsync(id);
 
             if(produto == null)
             {
