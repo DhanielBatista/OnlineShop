@@ -1,10 +1,10 @@
 # OnlineShopApi
 
-<br>
 
- Api para cadastro de Produtos e vendas online
 
-<br>
+ - Api para cadastro de Produtos e vendas online
+
+
 
 ## Pre-requisitos
 
