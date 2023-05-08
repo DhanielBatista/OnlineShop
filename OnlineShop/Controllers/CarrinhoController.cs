@@ -86,7 +86,7 @@ namespace OnlineShop.Controllers
                     }
                 }
             }
-
+            carrinho.AtualizarPrecoTotal();
             await _carrinhoService.AtualizarCarrinhoAsync(id, carrinho);
             return NoContent();
         }

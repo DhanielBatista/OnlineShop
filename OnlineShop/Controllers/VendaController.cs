@@ -51,5 +51,28 @@ namespace OnlineShop.Controllers
             return Ok(venda);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletaVenda(string id)
+        {
+            var venda = await _vendaService.BuscarVendaPorIdAsync(id);
+            if (venda == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var carrinho in venda.Carrinho)
+            {
+                foreach (var produto in carrinho.Produtos)
+                {
+                    produto.ProdutoVendido = false;
+                    await _produtoService.AtualizarProdutoAsync(produto.Id, produto);
+                }
+            }
+
+            await _vendaService.DeletarVendaAsync(id);
+
+            return NoContent();
+        }
+
     }
 }
