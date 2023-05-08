@@ -20,19 +20,14 @@ namespace OnlineShop.Controllers
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Carrinho>> BuscarCarrinhoId(string id)
         {
+           
             var carrinho = await _carrinhoService.BuscarCarrinhoPorIdAsync(id);
 
             if(carrinho == null)
             {
                 return NotFound();
             }
-            double precoTotal = 0;
-            foreach (var produto in carrinho.Produtos)
-            {
-                precoTotal += produto.Preco ?? 0;
-            }
-
-            carrinho.PrecoTotal = precoTotal;
+           
             return carrinho;
         }
 
@@ -58,7 +53,7 @@ namespace OnlineShop.Controllers
             {
                 Produtos = produtos
             };
-
+            carrinho.AtualizarPrecoTotal();
             await _carrinhoService.CriarCarrinhoAsync(carrinho);
 
             return Ok(carrinho);

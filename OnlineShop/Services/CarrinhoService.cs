@@ -20,22 +20,15 @@ namespace OnlineShop.Services
                 onlineShopDatabaseSettings.Value.CarrinhoCollectionName);
         }
 
-        public async Task<List<Carrinho>> BuscarCarrinhoAsync(int skip, int limit, FilterDefinition<Carrinho> filtro = null)
-        {
-
-            var carrinhos = await _carrinhoCollection.Find(filtro ?? Builders<Carrinho>.Filter.Empty)
-                            .Skip(skip)
-                            .Limit(limit)
-                            .ToListAsync();
-            return carrinhos;
-
-        }
         public async Task<Carrinho> BuscarCarrinhoPorIdAsync(string id)
         {
             return await _carrinhoCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
-        public async Task CriarCarrinhoAsync(Carrinho carrinho) =>
+        public async Task CriarCarrinhoAsync(Carrinho carrinho)
+        {
+            carrinho.AtualizarPrecoTotal();
             await _carrinhoCollection.InsertOneAsync(carrinho);
+        }
 
         public async Task AtualizarCarrinhoAsync(string id, Carrinho carrinho) =>
             await _carrinhoCollection.ReplaceOneAsync(x => x.Id == id, carrinho);

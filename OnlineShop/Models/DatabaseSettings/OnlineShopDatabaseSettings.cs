@@ -6,5 +6,6 @@
         public string DatabaseName { get; set; } = null!;
         public string ProdutoCollectionName { get; set; } = null!;
         public string CarrinhoCollectionName { get; set; } = null!;
+        public string VendaCollectionName { get; set; } = null!;
     }
 }

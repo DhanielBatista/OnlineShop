@@ -12,5 +12,20 @@ namespace OnlineShop.Models
         public List<Produto> Produtos { get; set; }
         [BsonElement("PrecoTotal")]
         public double PrecoTotal { get; set; }
+
+        public void AtualizarPrecoTotal()
+        {
+            PrecoTotal = CalcularPrecoTotal() ?? 0;
+        }
+
+        private double? CalcularPrecoTotal()
+        {
+            double? total = 0;
+            foreach (var produto in Produtos)
+            {
+                total += produto.Preco;
+            }
+            return total;
+        }
     }
 }
