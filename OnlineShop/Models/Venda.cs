@@ -9,7 +9,7 @@ namespace OnlineShop.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [BsonElement("DataVenda")]
-        public DateTime DataVenda { get; set; } = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+        public DateTime DataVenda { get; set; } = DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy"));
         [BsonElement("Carrinho")]
         public List<Carrinho> Carrinho { get; set; }
         [BsonElement("CupomDesconto")]

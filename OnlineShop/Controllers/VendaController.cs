@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using OnlineShop.Models;
 using OnlineShop.Models.Dtos.VendaDto;
 using OnlineShop.Services;
@@ -39,7 +40,6 @@ namespace OnlineShop.Controllers
                 CupomDesconto = vendaDto.CupomDesconto
             };
 
-            // Atualiza o ProdutoVendido de cada produto no carrinho para true
             foreach (var produto in carrinho.Produtos)
             {
                 produto.ProdutoVendido = true;
@@ -50,6 +50,24 @@ namespace OnlineShop.Controllers
 
             return Ok(venda);
         }
+        [HttpPost]
+        [Route("/ProdutosVendidos")]
+        public async Task<IActionResult> BuscarVendasPorPeriodo([FromBody] BuscarVendaDto vendaDto)
+        {
+            var filter = Builders<Venda>.Filter.And(
+          Builders<Venda>.Filter.Gte(v => v.DataVenda, vendaDto.DataInicio),
+          Builders<Venda>.Filter.Lte(v => v.DataVenda, vendaDto.DataFim));
+
+            var vendas = await _vendaService.BuscarVendaAsync();
+
+            if (vendas == null || !vendas.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(vendas);
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletaVenda(string id)
@@ -73,6 +91,7 @@ namespace OnlineShop.Controllers
 
             return NoContent();
         }
+
 
     }
 }

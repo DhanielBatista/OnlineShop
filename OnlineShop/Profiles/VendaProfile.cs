@@ -9,6 +9,7 @@ namespace OnlineShop.Profiles
         public VendaProfile()
         {
             CreateMap<CriarVendaDto,Venda>();
+            CreateMap<BuscarVendaDto,Venda>();
         }
     }
 }

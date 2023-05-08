@@ -21,7 +21,6 @@ namespace OnlineShop.Services
 
         public async Task<List<Venda>> BuscarVendaAsync() =>
          await _vendaCollection.Find(_ => true).ToListAsync();
-        
         public async Task<Venda> BuscarVendaPorIdAsync(string id)
         {
             return await _vendaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
